@@ -23,12 +23,20 @@ export interface IRoute extends IRouteBase {
 
 
 import Test from "@/views/Test"
+import WebRagOnlineEasy from "@/views/WebRagOnlineEasy"
+import WebRagOnline from "@/views/WebRagOnline"
 const routes = [
   {
     path:"/",
     element:<Test></Test>
   },
-
+  {
+    path:"/WebRagOnline",
+    element:<WebRagOnline></WebRagOnline>
+  }, {
+    path:"/WebRagOnlineEasy",
+    element:<WebRagOnlineEasy></WebRagOnlineEasy>
+  }
 ];
   
 export default routes;
