@@ -119,6 +119,8 @@ console.log(documents)
 
 ### 1.5  定义llm和embedding模型 
 
+简单介绍一下 embedding 模型，这里我们利用预训练的模型（OpenAI 的语言模型）将文本转换为向量表示。向量表示是文本的高维数值表示，可以捕捉文本的语义信息，便于后续的相似性计算和检索任务。
+
 ```ts
 import { OpenAIEmbeddings, ChatOpenAI } from "@langchain/openai";
 
