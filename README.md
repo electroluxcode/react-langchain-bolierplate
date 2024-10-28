@@ -7,7 +7,7 @@
 
 然后讲一下RAG（Retrieval Augmented Generation），这个玩意叫做检索增强生成。目的是减少所谓的模型幻觉问题，即大模型胡说八道的情况，同时也能避免由于数据不及时或未更新而导致的答案不准确的问题
 
-这个教程会用 医疗助手 作为一个类目 来做演示，目标是回答跟医疗相关的问题
+这个教程会用 医疗助手 作为一个类目 来做演示，目标是回答跟医疗相关的问题。代码地址在 https://github.com/electroluxcode/react-langchain-starter/    。有兴趣的朋友可以 clone 和 fork一下
 
 先总览一下这个应用的流程吧，大体分成两个阶段
 
@@ -17,6 +17,8 @@
 另外，这篇文章讲的是用openai的第三方llm模型来做, 然后其他家的服务商模型其实也就差不多这样的。大家可以举一反三。
 
 然后提前预告一下，接下来一篇文章，我会讲怎么用huggingface开源的模型来完成这种ai助手，支持离线调用和功能扩展，实现白嫖（bushi）。感兴趣的朋友可以关注我的github和掘金账号
+
+
 
 ### 前置准备资源
 
@@ -160,12 +162,6 @@ const vectorStoreRetriever = vectorStore.asRetriever();
 
 
 
-
-
-
-
-
-
 ### 1.7 构建prompt
 
 ```ts
@@ -226,7 +222,11 @@ console.log({ quesion,answer,documents,embeddings });
 
 
 
-至此其实基本的流程已经跑通了。总代码100行不到
+![ai](D:\myProject\react-langchain-starter\README.assets\ai.png)
+
+
+
+我们可以跟源数据进行比较，验证`drug_detail` 确实跟我们的 `answer` 相匹配。至此其实基本的流程已经跑通了。总代码100行不到。
 
 如果要应用到工程化的话，可能也就是加一个向量存储，然后维护一下数据的交互
 
@@ -236,11 +236,11 @@ url:http://localhost:3002/WebRagOnlineEasy
 
 
 
-## 1.10 简单构造ui
+### 1.10 简单构造ui
 
 
 
-最后简单构造一下ui把，前端的基操
+最后简单构造一下ui把，是前端的基操了，不赘述，有兴趣的可以看看
 
 url:http://localhost:3002/WebRagOnline
 
@@ -254,3 +254,8 @@ url:http://localhost:3002/WebRagOnline
 
 
 
+## 【纯前端】10 分钟带你用 langchainjs 做一个带RAG的AI医疗助手(离线白嫖版本)
+
+
+
+工作搬砖中，有时间续写。大纲是怎么调用开源模型实现上面的效果...................
