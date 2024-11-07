@@ -254,8 +254,153 @@ url:http://localhost:3002/WebRagOnline
 
 
 
-## 【纯前端】10 分钟带你用 langchainjs 做一个带RAG的AI医疗助手(离线白嫖版本)
+## 纯前端怎么离线调用huggingface 1000+多个大模型。以30行代码实现一个翻译助手示例
 
 
 
-工作搬砖中，有时间续写。大纲是怎么调用开源模型实现上面的效果...................
+大家好，我是electrolux，这篇文章带大家看看前端怎么直接离线调用huggingface的模型
+
+在开始文章之前。首先咱们来聊一下huggingface吧
+
+![image-20241107153902726](D:\myProject\react-langchain-starter\README.assets\image-20241107153902726.png)
+
+
+
+简单的来说huggingface 可以理解为对于AI开发者的GitHub，提供了模型，数据集等ai的物料。并且提供了一个名为 **transformers** 的库，这个库结合了多种模型，使得用户可以快速地学习和使用这些模型
+
+然后回归咱们的文章，咱们这篇文章也会用到 transformerjs， 这个库也是 官方提供的库，对比transformer其他服务端的package，主要少了视频的输出能力和表格任务。具体可以参考 https://hugging-face.cn/docs/transformers.js/index#tasks
+
+这篇文章会用 transformerjs 用 30行代码左右带你实现一个ai翻译助手，下面是成品，接着预告一下，下一篇文章我会用langchan+transformerjs实现一个带rag(目标检索增强)的llm助手，有兴趣的可以follow一下。话不多说，直接开始
+
+
+
+![image-20241107150051208](.\README.assets\image-20241107150010915.png)
+
+
+
+### 1.1  选择模型和下载模型 
+
+说实话，这一步可能就是咱们这个教程最难的地方了，由于众所皆知的原因，咱们不能直接连接huggingface，所以这一步我们可以选择他的镜像站点
+
+https://hf-mirror.com/
+
+现在是第二步，我们要清楚前端不是每一个模型都能够直接调用的，只有是onnx的格式才能够进行调用，因此  我们可以在hf中搜两个作者。 onnx-community 和 Xenova 。这两者的模型可以直接在前端调用。
+
+地址如下 
+
+- https://hf-mirror.com/Xenova
+- https://hf-mirror.com/onnx-community
+
+
+
+好，现在我们到第三步了，怎么把模型下载到我们本地。在前端项目中，public文件夹一般是可访问的。我们可以考虑将大模型下载到这里。由于文件较大，这里提供三个方法下载。在咱们的源码示例中，也不会携带模型的
+
+- submodule方法
+
+```shell
+git submodule add https://hf-mirror.com/Xenova/nllb-200-distilled-600M public/nllb-200-distilled-600M
+# 后续可能需要 git lfs pull
+```
+
+- 直接在 public 文件夹中 git clone，然后大文件直接去镜像站下载就好了
+- 也可以直接下载模型到一个可以访问的地址
+
+
+
+我的目录结构如下
+
+![image-20241107180056146](D:\myProject\react-langchain-starter\README.assets\image-20241107180056146.png)
+
+
+
+### 1.2  指定环境变量
+
+这一步是离线调用的关键，默认`transformer` 是 会加载 `huggingface` 的模型，我们可以通过改变环境变量来让前端去加载自己本地的模型
+
+
+
+```js
+import { env } from '@xenova/transformers';
+env.useCustomCache = false
+env.useFSCache = false
+// 会加载
+env.localModelPath = "/"
+```
+
+
+
+
+
+### 1.3  调用模型输出
+
+transformer核心是一个 pipeline 方法，然后 在 https://hf-mirror.com/Xenova/nllb-200-distilled-600M#usage-transformersjs 中 也有这个模型的使用示例
+
+```ts
+import { pipeline } from '@xenova/transformers';
+let dataGet = async () => {
+    const translator = await pipeline('translation', 'nllb-200-distilled-600M');
+    let input = '你好,今天天气怎么样'
+    const output = await translator(input, {
+        src_lang: 'zho_Hans', // Chinese
+        tgt_lang: 'eng_Latn', // English
+    });
+    console.log({
+        output, input
+    });
+}
+dataGet();
+```
+
+
+
+
+
+完整代码如下，26行代码就实现了，aw。确实简单
+
+```ts
+import React from 'react'
+import { useEffect } from 'react'
+import { pipeline, env } from '@xenova/transformers';
+env.useCustomCache = false
+env.useFSCache = false
+env.localModelPath = "/model"
+export default function index() {
+    let dataGet = async () => {
+        const translator = await pipeline('translation', 'nllb-200-distilled-600M');
+        let input = '你好,今天天气怎么样'
+        const output = await translator(input, {
+            src_lang: 'zho_Hans', // Chinese
+            tgt_lang: 'eng_Latn', // English
+        });
+        console.log({
+            output, input
+        });
+    }
+    useEffect(() => {
+        dataGet();
+    })
+    return (
+        <div>transformer</div>
+    )
+}
+
+```
+
+
+
+### 1.4 总结
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
