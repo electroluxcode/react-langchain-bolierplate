@@ -260,9 +260,13 @@ url:http://localhost:3002/WebRagOnline
 
 大家好，我是electrolux，这篇文章带大家看看前端怎么直接离线调用huggingface的模型
 
+代码在这里: https://github.com/electroluxcode/react-langchain-starter
+
+路由是: /transformer
+
 在开始文章之前。首先咱们来聊一下huggingface吧
 
-![image-20241107153902726](D:\myProject\react-langchain-starter\README.assets\image-20241107153902726.png)
+![image-20241107153902726](README.assets/image-20241107153902726.png)
 
 
 
@@ -274,7 +278,7 @@ url:http://localhost:3002/WebRagOnline
 
 
 
-![image-20241107150051208](.\README.assets\image-20241107150010915.png)
+![image-20241107150051208](README.assets/image-20241107150010915.png)
 
 
 
@@ -309,7 +313,7 @@ git submodule add https://hf-mirror.com/Xenova/nllb-200-distilled-600M public/nl
 
 我的目录结构如下
 
-![image-20241107180056146](D:\myProject\react-langchain-starter\README.assets\image-20241107180056146.png)
+![image-20241107180056146](README.assets/image-20241107180056146.png)
 
 
 
@@ -355,7 +359,7 @@ dataGet();
 
 
 
-完整代码如下，26行代码就实现了，aw。确实简单
+完整代码如下，26行代码就实现了，aw。确实简单。然后就在控制台中输出了
 
 ```ts
 import React from 'react'
@@ -388,7 +392,202 @@ export default function index() {
 
 
 
-### 1.4 总结
+### 1.4 代码简单加个ui
+
+
+
+结果见这个
+
+
+
+![image-20241107150051208](README.assets/image-20241107150010915.png)
+
+css文件
+
+```css
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.bg-black{
+  background-color: #000;
+}
+
+.bg-blue-1{
+  background-color: #e6f2ff;
+}
+
+.bg-blue-3{
+  background-color: #007bff;
+}
+.bg-white{
+  background-color: #fff;
+}
+
+.bg-black-1{
+  background: #585a5d
+}
+
+.color-white-1{
+  color: #c3c3c3
+}
+
+
+.color-blue-1{
+  color: #a6d2ff;
+}
+.color-blue-3{
+  color: #007bff;
+}
+.color-white{
+  color: #fff;
+}
+
+.chat-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  
+ 
+}
+.chat-move{
+  position: relative;
+  top: -100px;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.messages-container {
+  width: 80%;
+  max-height: 60%;
+  overflow-y: auto;
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 0 4px 8px rgba(0, 0, 255, 0.2);
+}
+
+.message {
+  padding: 12px;
+  border-radius: 10px;
+  margin-bottom: 15px;
+  word-break: break-word;
+}
+
+.user {
+  border: 1px solid #c2e0ff;
+  align-self: flex-end;
+}
+
+.bot {
+  border: 1px solid #c2e0ff;
+  display: flex;
+  flex-direction: row-reverse;
+  align-self: flex-start;
+}
+
+.input-area {
+  display: flex;
+  gap: 10px;
+  width: 80%;
+  margin-top: 20px;
+}
+
+input {
+  flex-grow: 1;
+  border: 1px solid #007bff;
+  border-radius: 10px;
+}
+input:focus {
+  outline: none;
+  border: 1px solid #007bff;
+}
+
+button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+}
+```
+
+
+
+tsx文件示例，路由在  /Transformer
+
+```tsx
+import React from 'react'
+import { useState} from 'react'
+
+import { pipeline, env } from '@xenova/transformers';
+env.useCustomCache = false
+env.useFSCache = false
+env.localModelPath = "/"
+export default function index() {
+
+  const dataGet = async (inputValueTemp) => {
+    
+    setAnswer("加载中");
+    const translator = await pipeline('translation', 'nllb-200-distilled-600M');
+    const output = await (translator as any)(inputValueTemp, {
+      src_lang: 'zho_Hans', // Chinese
+      tgt_lang: 'eng_Latn', // English
+    }) ;
+    setAnswer(output[0].translation_text);
+  }
+  const [quesion, setQuestion] = useState('提问区');
+  const [answer, setAnswer] = useState('回答区');
+  const [inputValue, setInputValue] = useState('');
+
+  const handleSendMessage = () => {
+    if (inputValue.trim() !== '') {
+      setQuestion(inputValue)
+      setInputValue('');
+      dataGet(inputValue)
+    }
+  };
+
+  return (
+    <div className="chat-container bg-black-1">
+      <div className="chat-move">
+        <div className="title">
+          <h1 className='color-white-1'>AI翻译助手</h1>
+        </div>
+        <div className="messages-container bg-white">
+          <div
+            className="message user"
+          >
+            {quesion}
+          </div>
+          <div
+            className="message bot"
+          >
+            {answer}
+          </div>
+        </div>
+        <div className="input-area">
+          <input
+            type="text"
+            value={inputValue}
+            onChange={(e) => setInputValue(e.target.value)}
+          />
+          <button className='bg-blue-3 color-white' onClick={handleSendMessage}>发送</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+```
 
 
 
@@ -396,11 +595,19 @@ export default function index() {
 
 
 
+### 1.5  感叹一下
 
+transformerjs确实是个好框架，可惜的是transformerjs并不支持训练，虽然也没几个会在客户端进行训练哈哈。
 
+并且现在如果要web端加载几个g的模型对性能是个大挑战
 
+因此这个玩意工程化之路道阻且长, 但是我相信也不会有多久的，
 
+目前唯一感觉可以使用的场景是在手机端，可以模仿王者荣耀资源包的形式引入模型，让用户自主选择。
 
+顺便一提，最近看 到一个 MobileLLM(Optimizing Sub-billion Parameter Language Models for On-Device Use Cases)，算是近期优化的比较好的一个开源模型，是为了移动端性能考虑的量化模型，但是文件堪堪也有800M，虽然也挺大的，但是在动则3，4G的模型中算还可以
 
-
+- paper:https://arxiv.org/pdf/2402.14905
+- code: https://github.com/facebookresearch/MobileLLM
+- example：https://github.com/huggingface/transformers.js/pull/1003
 
