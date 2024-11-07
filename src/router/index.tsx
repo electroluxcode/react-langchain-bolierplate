@@ -1,4 +1,5 @@
 import React,{lazy, Suspense} from 'react';
+import Transformer from '@/views/Transformer'
 export interface IRouteBase {
     // 路由路径
     path: string;
@@ -36,6 +37,10 @@ const routes = [
   }, {
     path:"/WebRagOnlineEasy",
     element:<WebRagOnlineEasy></WebRagOnlineEasy>
+  },
+  {
+    path: "/Transformer",
+    element: <Transformer></Transformer>
   }
 ];
   

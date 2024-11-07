@@ -1,0 +1,9 @@
+# transformer 模型
+# git submodule add https://hf-mirror.com/Xenova/nllb-200-distilled-600M   public/model
+# git submodule init  && git submodule update
+[submodule "public/model/nllb-200-distilled-600M"]
+	path = public/model/nllb-200-distilled-600M
+	url = https://hf-mirror.com/Xenova/nllb-200-distilled-600M
+[submodule "public/model"]
+	path = public/model
+	url = https://hf-mirror.com/Xenova/nllb-200-distilled-600M

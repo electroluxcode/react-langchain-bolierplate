@@ -4,7 +4,6 @@ import { MemoryVectorStore } from "langchain/vectorstores/memory";
 // import {  OpenAIEmbeddings } from "@langchain/openai";
 import { OpenAIEmbeddings, ChatOpenAI } from "@langchain/openai";
 
-import "./index.css"
 import { StringOutputParser } from "@langchain/core/output_parsers";
 import {
   RunnablePassthrough,
@@ -98,12 +97,12 @@ export default function index() {
 
 
   return (
-    <div className="chat-container">
+    <div className="chat-container bg-blue-1">
       <div className="chat-move">
         <div className="title">
-          <h1>AI医疗助手</h1>
+          <h1 className='color-blue-1'>AI医疗助手</h1>
         </div>
-        <div className="messages-container">
+        <div className="messages-container bg-white">
           <div
             className="message user"
           >
@@ -116,12 +115,11 @@ export default function index() {
           </div>
         </div>
         <div className="input-area">
-          <input
-            type="text"
+          <textarea
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
           />
-          <button onClick={handleSendMessage}>发送</button>
+          <button className='bg-blue-3 color-white' onClick={handleSendMessage}>发送</button>
         </div>
       </div>
     </div>
